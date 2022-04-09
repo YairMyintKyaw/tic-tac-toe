@@ -5,45 +5,23 @@ const Player = function(player,mark){
         position.push(place);
     }
 
-    function checkWin(){
-        console.log(position)
-        if(check3InRow(1,2,3) || 
-            check3InRow(4,5,6) ||
-            check3InRow(7,8,9) ||
-            check3InRow(1,4,7) ||
-            check3InRow(2,5,8) ||
-            check3InRow(3,6,9) ||
-            check3InRow(1,5,9) ||
-            check3InRow(3,5,7)){
-            alert(player+'wins');
-        }
-    }
-
-    function check3InRow(first,second,third){
-        if(position.indexOf(first.toString())!=-1 && 
-            position.indexOf(second.toString())!=-1 && 
-            position.indexOf(third.toString())!=-1 ){
-                return true;
-            }else{
-                return false;
-            }
-    }
-
     return{
         addPosition,
+        position,
         name:player,
-        checkWin,
-        mark,
+        mark
     }
 }
 
-const player1= Player('player1','X')
-const player2= Player('player2','O')
+
 
 const board=(function(){
-    let whichPlayerTurn='player1'
+    // whose turn
+    let whichPlayerTurn='Player 1';
+    const whoseTurn=document.querySelector('.playerTurn')
     // create two player
-    
+    const player1= Player('Player 1','X');
+    const player2= Player('Player 2','O'); 
 
     // catch space for user input
     const spaces=document.querySelectorAll('.playerArea');
@@ -52,24 +30,77 @@ const board=(function(){
     for(let i=0;i<spaces.length;i++){
         spaces[i].id= i+1
         spaces[i].addEventListener('click',fillInput)
-        
     }
 
     function fillInput(){
-        if(whichPlayerTurn=='player1'){
+        whoseTurn.textContent= whichPlayerTurn=='Player 1'? 'Player 2': 'Player 1';
+        if(whichPlayerTurn=='Player 1'){
             this.textContent=player1.mark;
             player1.addPosition(this.id)
-            player1.checkWin()
-            
-            whichPlayerTurn='player2';
+            checkWin.call(player1);
+            whichPlayerTurn='Player 2';
         }else{
             this.textContent=player2.mark;
             player2.addPosition(this.id)
-            player2.checkWin()
-            
-            whichPlayerTurn='player1';
+            checkWin.call(player2)
+            whichPlayerTurn='Player 1';
         }
         this.removeEventListener('click',fillInput)
     }
 
+
+
+
+    function checkWin(){
+        if(check3InRow(1,2,3,this) || 
+            check3InRow(4,5,6,this) ||
+            check3InRow(7,8,9,this) ||
+            check3InRow(1,4,7,this) ||
+            check3InRow(2,5,8,this) ||
+            check3InRow(3,6,9,this) ||
+            check3InRow(1,5,9,this) ||
+            check3InRow(3,5,7,this)) {
+            spaces.forEach((space)=>{
+                space.removeEventListener('click',fillInput)
+            })
+            whoseTurn.textContent=`${this.name} wins`
+            setTimeout(()=>{
+                window.addEventListener('click',restartTheGame)
+            },100)
+        }else if(player1.position.length==5){
+            whoseTurn.textContent=`It is draw`
+            setTimeout(()=>{
+                window.addEventListener('click',restartTheGame)
+            },100)
+        }
+    }
+
+    function restartTheGame(){
+        setTimeout(() => {
+            spaces.forEach((space)=>{
+                space.textContent=''
+                space.addEventListener('click',fillInput);
+                space.style.color='#03e9f4';
+            })
+        }, 100);
+        whoseTurn.textContent='Player 1'
+        whichPlayerTurn='Player 1'
+        player1.position.length=0;
+        player2.position.length=0;
+        window.removeEventListener('click',restartTheGame)
+    }
+
+    function check3InRow(first,second,third,scope){
+        if(scope.position.indexOf(first.toString())!=-1 && 
+            scope.position.indexOf(second.toString())!=-1 && 
+            scope.position.indexOf(third.toString())!=-1 ){
+                let list=[first,second,third]
+                list.forEach((item)=>{
+                    spaces[item-1].style.color='yellow'
+                })
+                return true;
+            }else{
+                return false;
+            }
+    }
 })();
