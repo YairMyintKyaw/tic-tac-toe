@@ -1,13 +1,6 @@
 const Player = function(player,mark){
-    let position=[];
-
-    function addPosition(place){
-        position.push(place);
-    }
 
     return{
-        addPosition,
-        position,
         name:player,
         mark
     }
@@ -156,8 +149,6 @@ const board=(function(){
         }, 100);
         whoseTurn.textContent='Player 1'
         whichPlayerTurn='Player 1'
-        player1.position.length=0;
-        player2.position.length=0;
     }
 
     
