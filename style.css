@@ -7,7 +7,7 @@
 
 :root{
     --background:linear-gradient(to right, #000428, #004e92); ;
-    --line-color:black;
+    --line-color:rgb(202, 202, 202);
     --input-color:#03e9f4
 }
 
@@ -41,8 +41,9 @@ h1,.playerTurn{
 }
 
 .container{
+    flex-basis: auto;
     width: clamp(200px,70%,800px);
-    height: clamp(200px,70%,800px);;
+    /* height: clamp(200px,70%,800px);; */
     display: grid;
     grid-template-columns:  1fr 10px 1fr 10px 1fr;
     grid-template-rows: 1fr 10px 1fr 10px 1fr;
@@ -50,8 +51,9 @@ h1,.playerTurn{
 
 .line{
     width: 10px;
-    background-color: var(--line-color);
+    border:solid 1px var(--line-color);
     border-radius: 5px;
+    
 }
 
 .line:nth-of-type(2){
